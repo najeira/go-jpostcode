@@ -70,13 +70,12 @@ func Test_convertJSONToAddress(t *testing.T) {
 }
 
 func Benchmark_newBadgerAdapter(b *testing.B) {
-	ms := startMemStats()
-	if _, err := newBadgerAdapter(); err != nil {
-		b.Error(err)
-	}
-	ms.Stop("newBadgerAdapter")
-	b.ResetTimer()
-
+	//ms := startMemStats()
+	//if _, err := newBadgerAdapter(); err != nil {
+	//	b.Error(err)
+	//}
+	//ms.Stop("newBadgerAdapter")
+	//b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := newBadgerAdapter()
 		if err != nil {
@@ -86,13 +85,12 @@ func Benchmark_newBadgerAdapter(b *testing.B) {
 }
 
 func Benchmark_newMapAdapter(b *testing.B) {
-	ms := startMemStats()
-	if _, err := newMapAdapter(); err != nil {
-		b.Error(err)
-	}
-	ms.Stop("newMapAdapter")
-	b.ResetTimer()
-
+	//ms := startMemStats()
+	//if _, err := newMapAdapter(); err != nil {
+	//	b.Error(err)
+	//}
+	//ms.Stop("newMapAdapter")
+	//b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := newMapAdapter()
 		if err != nil {

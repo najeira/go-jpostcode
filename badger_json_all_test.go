@@ -36,14 +36,32 @@ func TestAll_searchAddressesFromJSON_Files(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	a, err := newBadgerAdapter()
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, postCode := range postCodes {
-		t.Run(postCode[0:3], func(t *testing.T) {
+		t.Run("badger_"+postCode[0:3], func(t *testing.T) {
 			t.Parallel()
 			addrs, err := a.SearchAddressesFromPostCode(postCode)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(addrs) == 0 {
+				t.Fatal("at least 1 address must be found")
+			}
+		})
+	}
+
+	ma, err := newMapAdapter()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, postCode := range postCodes {
+		t.Run("map_"+postCode[0:3], func(t *testing.T) {
+			t.Parallel()
+			addrs, err := ma.SearchAddressesFromPostCode(postCode)
 			if err != nil {
 				t.Fatal(err)
 			}
