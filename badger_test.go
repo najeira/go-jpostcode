@@ -1,6 +1,8 @@
 package jpostcode
 
 import (
+	"fmt"
+	"runtime"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -68,10 +70,58 @@ func Test_convertJSONToAddress(t *testing.T) {
 }
 
 func Benchmark_newBadgerAdapter(b *testing.B) {
+	ms := startMemStats()
+	if _, err := newBadgerAdapter(); err != nil {
+		b.Error(err)
+	}
+	ms.Stop("newBadgerAdapter")
+	b.ResetTimer()
+
 	for i := 0; i < b.N; i++ {
 		_, err := newBadgerAdapter()
 		if err != nil {
 			b.Error(err)
 		}
 	}
+}
+
+func Benchmark_newMapAdapter(b *testing.B) {
+	ms := startMemStats()
+	if _, err := newMapAdapter(); err != nil {
+		b.Error(err)
+	}
+	ms.Stop("newMapAdapter")
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_, err := newMapAdapter()
+		if err != nil {
+			b.Error(err)
+		}
+	}
+}
+
+type memStats struct {
+	s runtime.MemStats
+}
+
+func startMemStats() *memStats {
+	s := new(memStats)
+	runtime.GC()
+	runtime.ReadMemStats(&s.s)
+	return s
+}
+
+func (s *memStats) Stop(name string) {
+	var rs runtime.MemStats
+	runtime.GC()
+	runtime.ReadMemStats(&rs)
+
+	netHeap := rs.HeapAlloc - s.s.HeapAlloc
+	netAllocs := rs.Mallocs - s.s.Mallocs
+	netBytes := rs.TotalAlloc - s.s.TotalAlloc
+	fmt.Printf(
+		"%s: %d B/op %d allocs/op %d B/inc\n",
+		name, netBytes, netAllocs, netHeap)
+	s.s = rs
 }

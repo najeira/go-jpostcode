@@ -12,7 +12,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-//go:embed badger/*
+//go:embed data/*
 var staticFS embed.FS
 
 type badgerAdapter struct {
@@ -20,7 +20,7 @@ type badgerAdapter struct {
 }
 
 func newBadgerAdapter() (*badgerAdapter, error) {
-	f, err := staticFS.Open("badger/dump.db.gz")
+	f, err := staticFS.Open("data/badger.db.gz")
 	if err != nil {
 		return nil, err
 	}

@@ -5,8 +5,13 @@ import (
 )
 
 var (
-	adapter     Adapter
-	adapterOnce sync.Once
+	UseMapAdapter bool
+
+	bAdapter     Adapter
+	bAdapterOnce sync.Once
+
+	mAdapter     Adapter
+	mAdapterOnce sync.Once
 )
 
 func Find(postCode string) (*Address, error) {
@@ -21,15 +26,34 @@ func Find(postCode string) (*Address, error) {
 }
 
 func Search(postCode string) ([]*Address, error) {
-	adapterOnce.Do(func() {
+	if UseMapAdapter {
+		return getMapAdapter().SearchAddressesFromPostCode(postCode)
+	}
+	return getBadgerAdapter().SearchAddressesFromPostCode(postCode)
+}
+
+func getBadgerAdapter() Adapter {
+	bAdapterOnce.Do(func() {
 		// set default adapter
 		var err error
-		adapter, err = newBadgerAdapter()
+		bAdapter, err = newBadgerAdapter()
 		if err != nil {
 			panic(err)
 		}
 		// closing DB is not needed because badger adapter is using in-memory DB
 		// adapter.db.Close()
 	})
-	return adapter.SearchAddressesFromPostCode(postCode)
+	return bAdapter
+}
+
+func getMapAdapter() Adapter {
+	mAdapterOnce.Do(func() {
+		// set default adapter
+		var err error
+		mAdapter, err = newMapAdapter()
+		if err != nil {
+			panic(err)
+		}
+	})
+	return mAdapter
 }

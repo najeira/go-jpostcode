@@ -54,7 +54,7 @@ func main() {
 		return nil
 	})
 
-	f, err := os.OpenFile("./badger/dump.db.gz", os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.OpenFile("./data/badger.db.gz", os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
@@ -64,10 +64,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer gw.Close()
 
-	_, err = db.Backup(gw, 0)
-	if err != nil {
+	if _, err = db.Backup(gw, 0); err != nil {
+		panic(err)
+	}
+
+	if err := gw.Close(); err != nil {
 		panic(err)
 	}
 }
