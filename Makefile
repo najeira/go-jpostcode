@@ -16,4 +16,5 @@ update:
 	go run script/gobdump/main.go
 
 dump:
-	go run script/gobdump/main.go
+	rm -f ./internal/data/*.go
+	go run script/vardump/main.go
