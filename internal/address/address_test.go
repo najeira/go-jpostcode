@@ -4,13 +4,12 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/syumai/go-jpostcode"
 )
 
 func Test_FromMap(t *testing.T) {
 	tests := map[string]struct {
 		input   interface{}
-		want    *jpostcode.Address
+		want    *Address
 		wantErr bool
 	}{
 		"ok with valid input": {
@@ -27,7 +26,7 @@ func Test_FromMap(t *testing.T) {
 				"office_name":      "東京都庁",
 				"office_name_kana": "トウキヨウトチヨウ",
 			},
-			want: &jpostcode.Address{
+			want: &Address{
 				PostCode:       "1638001",
 				Prefecture:     "東京都",
 				PrefectureCode: 13,

@@ -37,10 +37,7 @@ func TestAll_searchAddressesFromJSON_Files(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ma, err := newMapAdapter()
-	if err != nil {
-		t.Fatal(err)
-	}
+	ma := new(varAdapter)
 	for _, postCode := range postCodes {
 		t.Run(postCode[0:3], func(t *testing.T) {
 			t.Parallel()

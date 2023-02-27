@@ -24,10 +24,11 @@ func Search(postCode string) ([]*Address, error) {
 	adapterOnce.Do(func() {
 		// set default adapter
 		var err error
-		adapter, err = newMapAdapter()
+		//adapter, err = newMapAdapter()
 		if err != nil {
 			panic(err)
 		}
+		adapter = new(varAdapter)
 	})
 	return adapter.SearchAddressesFromPostCode(postCode)
 }
